@@ -1,17 +1,15 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { CustomerForm } from "@/components/customers/CustomerForm";
 import { customerData } from "@/data/customerData";
-import { Customer, PurchaseOrder } from "@/types/customer";
+import { Customer } from "@/types/customer";
 import { PurchaseOrdersList } from "@/components/customers/PurchaseOrdersList";
+import { CustomerDetailsTabs } from "@/components/customers/CustomerDetailsTabs";
 
 // Sample purchase order data for demonstration
-const samplePurchaseOrders: PurchaseOrder[] = [
+const samplePurchaseOrders = [
   {
     id: "po1",
     date: "2023-09-15",
@@ -143,147 +141,7 @@ const CustomerDetails = () => {
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <div>
-              <Tabs defaultValue="company">
-                <TabsList className="mb-6">
-                  <TabsTrigger value="company">Company</TabsTrigger>
-                  <TabsTrigger value="contact">Contact</TabsTrigger>
-                  <TabsTrigger value="bank">Bank</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="company">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Company Details</CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h3 className="font-semibold text-gray-500">Company Name</h3>
-                        <p>{customer.companyName}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-500">Business Registration</h3>
-                        <p>{customer.businessRegistrationNumber}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-500">Type of Business</h3>
-                        <p>{customer.typeOfBusiness}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-500">Tax ID/VAT</h3>
-                        <p>{customer.taxId}</p>
-                      </div>
-                      <div className="md:col-span-2">
-                        <h3 className="font-semibold text-gray-500">Bill To Address</h3>
-                        <p>{customer.billToAddress}</p>
-                      </div>
-                      <div className="md:col-span-2">
-                        <h3 className="font-semibold text-gray-500">Ship To Address</h3>
-                        <p>{customer.shipToAddress}</p>
-                      </div>
-                      <div className="md:col-span-2">
-                        <h3 className="font-semibold text-gray-500">Subsidiary Information</h3>
-                        <p>{customer.isSubsidiary ? "Yes" : "No"}</p>
-                        {customer.isSubsidiary && (
-                          <p>{customer.parentCompany}</p>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                <TabsContent value="contact">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Contact Details</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="text-lg">Purchase</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <p><span className="font-medium">Name:</span> {customer.contactDetails.purchase.name}</p>
-                            <p><span className="font-medium">Email:</span> {customer.contactDetails.purchase.email}</p>
-                            <p><span className="font-medium">Phone:</span> {customer.contactDetails.purchase.phone}</p>
-                          </CardContent>
-                        </Card>
-
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="text-lg">Finance</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <p><span className="font-medium">Name:</span> {customer.contactDetails.finance.name}</p>
-                            <p><span className="font-medium">Email:</span> {customer.contactDetails.finance.email}</p>
-                            <p><span className="font-medium">Phone:</span> {customer.contactDetails.finance.phone}</p>
-                          </CardContent>
-                        </Card>
-
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="text-lg">Quality</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <p><span className="font-medium">Name:</span> {customer.contactDetails.quality.name}</p>
-                            <p><span className="font-medium">Email:</span> {customer.contactDetails.quality.email}</p>
-                            <p><span className="font-medium">Phone:</span> {customer.contactDetails.quality.phone}</p>
-                          </CardContent>
-                        </Card>
-
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="text-lg">Management</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <p><span className="font-medium">Name:</span> {customer.contactDetails.management.name}</p>
-                            <p><span className="font-medium">Email:</span> {customer.contactDetails.management.email}</p>
-                            <p><span className="font-medium">Phone:</span> {customer.contactDetails.management.phone}</p>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
-                <TabsContent value="bank">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Bank Details</CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h3 className="font-semibold text-gray-500">Bank Name</h3>
-                        <p>{customer.bankDetails.bankName}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-500">Account Holder</h3>
-                        <p>{customer.bankDetails.accountHolderName}</p>
-                      </div>
-                      <div className="md:col-span-2">
-                        <h3 className="font-semibold text-gray-500">Bank Address</h3>
-                        <p>{customer.bankDetails.address}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-500">Contact Number</h3>
-                        <p>{customer.bankDetails.contactNumber}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-500">Account Number</h3>
-                        <p>{customer.bankDetails.accountNumber}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-500">Swift Code</h3>
-                        <p>{customer.bankDetails.swiftCode}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-500">IBAN</h3>
-                        <p>{customer.bankDetails.iban}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
+              <CustomerDetailsTabs customer={customer} />
             </div>
             
             <div>
