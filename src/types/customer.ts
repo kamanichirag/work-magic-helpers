@@ -49,6 +49,7 @@ export interface PurchaseOrder {
   shipDate: string;
   shipVia: string;
   note: string;
+  status?: "active" | "closed";
   items: PurchaseOrderItem[];
   total: number;
 }

@@ -20,9 +20,12 @@ import {
   Card, 
   CardContent, 
   CardHeader, 
-  CardTitle 
+  CardTitle,
+  CardDescription 
 } from "@/components/ui/card";
 import { PurchaseOrder, PurchaseOrderItem } from "@/types/customer";
+import { Badge } from "@/components/ui/badge";
+import { Circle, CircleDot, Plus, Import } from "lucide-react";
 
 interface PurchaseOrdersListProps {
   purchaseOrders: PurchaseOrder[];
@@ -34,12 +37,28 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Purchase Order History</CardTitle>
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle>Purchase Order History</CardTitle>
+            <CardDescription>View and manage customer purchase orders</CardDescription>
+          </div>
+          <div className="flex space-x-2">
+            <Button size="sm" className="flex items-center">
+              <Import className="mr-1" size={16} />
+              Import PO
+            </Button>
+            <Button size="sm" className="flex items-center">
+              <Plus className="mr-1" size={16} />
+              Create S/O
+            </Button>
+          </div>
+        </div>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>P.O.#</TableHead>
               <TableHead>Vendor</TableHead>
@@ -51,6 +70,21 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
             {purchaseOrders && purchaseOrders.length > 0 ? (
               purchaseOrders.map((order) => (
                 <TableRow key={order.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      {order.status === "active" ? (
+                        <>
+                          <CircleDot className="text-green-500" size={16} />
+                          <span className="text-green-700">Active</span>
+                        </>
+                      ) : (
+                        <>
+                          <Circle className="text-gray-400" size={16} />
+                          <span className="text-gray-500">Closed</span>
+                        </>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>{order.date}</TableCell>
                   <TableCell>{order.poNumber}</TableCell>
                   <TableCell>{order.vendor}</TableCell>
@@ -68,7 +102,22 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
                       </DialogTrigger>
                       <DialogContent className="max-w-4xl">
                         <DialogHeader>
-                          <DialogTitle>Purchase Order #{order.poNumber}</DialogTitle>
+                          <DialogTitle className="flex items-center gap-2">
+                            Purchase Order #{order.poNumber}
+                            <Badge className="ml-2" variant={order.status === "active" ? "default" : "outline"}>
+                              {order.status === "active" ? (
+                                <span className="flex items-center gap-1">
+                                  <CircleDot className="text-green-500" size={14} />
+                                  Active
+                                </span>
+                              ) : (
+                                <span className="flex items-center gap-1">
+                                  <Circle className="text-gray-400" size={14} />
+                                  Closed
+                                </span>
+                              )}
+                            </Badge>
+                          </DialogTitle>
                         </DialogHeader>
                         <div className="grid grid-cols-2 gap-4 mb-6">
                           <div>
@@ -124,7 +173,7 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-6">
+                <TableCell colSpan={6} className="text-center py-6">
                   No purchase orders found for this customer
                 </TableCell>
               </TableRow>

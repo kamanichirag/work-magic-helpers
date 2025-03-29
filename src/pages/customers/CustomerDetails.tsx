@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,18 @@ import { customerData } from "@/data/customerData";
 import { Customer } from "@/types/customer";
 import { PurchaseOrdersList } from "@/components/customers/PurchaseOrdersList";
 import { CustomerDetailsTabs } from "@/components/customers/CustomerDetailsTabs";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Trash2 } from "lucide-react";
 
 // Sample purchase order data for demonstration
 const samplePurchaseOrders = [
@@ -21,6 +34,7 @@ const samplePurchaseOrders = [
     shipDate: "2023-09-20",
     shipVia: "FedEx",
     note: "Expedited shipping requested",
+    status: "active",
     items: [
       {
         id: "item1",
@@ -54,6 +68,7 @@ const samplePurchaseOrders = [
     shipDate: "2023-10-15",
     shipVia: "UPS",
     note: "Temperature controlled shipping required",
+    status: "closed",
     items: [
       {
         id: "item3",
@@ -108,6 +123,12 @@ const CustomerDetails = () => {
     setIsEditing(false);
   };
 
+  const handleDelete = () => {
+    // In a real app, this would make an API call to delete the customer
+    toast.success("Customer deleted successfully");
+    navigate("/customers");
+  };
+
   if (!customer) {
     return (
       <div className="container mx-auto py-8 px-4">
@@ -125,7 +146,29 @@ const CustomerDetails = () => {
         </div>
         <div className="flex gap-2">
           {!isEditing ? (
-            <Button onClick={handleEdit}>Edit Customer</Button>
+            <>
+              <Button onClick={handleEdit}>Edit Customer</Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="destructive">
+                    <Trash2 className="mr-1" size={16} />
+                    Delete
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Customer</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete this customer? This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
           ) : (
             <Button onClick={handleCancel} variant="outline">Cancel</Button>
           )}
@@ -139,14 +182,9 @@ const CustomerDetails = () => {
         <CustomerForm initialData={customer} onSubmit={handleSave} isEditing />
       ) : (
         <>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div>
-              <CustomerDetailsTabs customer={customer} />
-            </div>
-            
-            <div>
-              <PurchaseOrdersList purchaseOrders={customer.purchaseOrders || []} />
-            </div>
+          <div className="grid grid-cols-1 gap-6 mb-8">
+            <CustomerDetailsTabs customer={customer} paymentStatus="pending" />
+            <PurchaseOrdersList purchaseOrders={customer.purchaseOrders || []} />
           </div>
         </>
       )}
