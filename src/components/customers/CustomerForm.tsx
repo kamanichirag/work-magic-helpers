@@ -103,16 +103,26 @@ export const CustomerForm = ({ initialData, onSubmit, isEditing = false }: Custo
       // Handle nested fields
       if (field.includes(".")) {
         const [section, subSection, property] = field.split(".");
-        return {
-          ...prev,
-          [section]: {
-            ...prev[section as keyof Customer],
-            [subSection]: {
-              ...prev[section as keyof Customer][subSection],
-              [property]: value
+        
+        if (section && subSection && property && section in prev) {
+          const sectionObj = prev[section as keyof Customer];
+          if (sectionObj && typeof sectionObj === 'object' && subSection in sectionObj) {
+            const subSectionObj = sectionObj[subSection as keyof typeof sectionObj];
+            if (subSectionObj && typeof subSectionObj === 'object' && property in subSectionObj) {
+              return {
+                ...prev,
+                [section]: {
+                  ...sectionObj,
+                  [subSection]: {
+                    ...subSectionObj,
+                    [property]: value
+                  }
+                }
+              };
             }
           }
-        };
+        }
+        return prev;
       }
       
       // Handle top-level fields

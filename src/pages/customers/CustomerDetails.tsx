@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -93,10 +92,8 @@ const CustomerDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
   
   useEffect(() => {
-    // In a real app, this would be an API call
     const foundCustomer = customerData.find(c => c.id === id);
     if (foundCustomer) {
-      // Add sample purchase orders to the customer data
       setCustomer({
         ...foundCustomer,
         purchaseOrders: samplePurchaseOrders
@@ -118,7 +115,6 @@ const CustomerDetails = () => {
     });
     setIsEditing(false);
     toast.success("Customer details updated successfully");
-    // In a real app, this would make an API call to update the customer
   };
 
   const handleCancel = () => {
@@ -126,7 +122,6 @@ const CustomerDetails = () => {
   };
 
   const handleDelete = () => {
-    // In a real app, this would make an API call to delete the customer
     toast.success("Customer deleted successfully");
     navigate("/customers");
   };
@@ -156,29 +151,26 @@ const CustomerDetails = () => {
             Create PO
           </Button>
           {!isEditing ? (
-            <>
-              <Button onClick={handleEdit}>Edit Customer</Button>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive">
-                    <Trash2 className="mr-1" size={16} />
-                    Delete
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Customer</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to delete this customer? This action cannot be undone.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">
+                  <Trash2 className="mr-1" size={16} />
+                  Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Customer</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to delete this customer? This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           ) : (
             <Button onClick={handleCancel} variant="outline">Cancel</Button>
           )}
@@ -193,7 +185,11 @@ const CustomerDetails = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 gap-6 mb-8">
-            <CustomerDetailsTabs customer={customer} paymentStatus="pending" />
+            <CustomerDetailsTabs 
+              customer={customer} 
+              paymentStatus="pending" 
+              onEdit={handleEdit}
+            />
             <PurchaseOrdersList purchaseOrders={customer.purchaseOrders || []} />
           </div>
         </>

@@ -1,16 +1,21 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Customer } from "@/types/customer";
+import { Button } from "@/components/ui/button";
 
 interface CompanyDetailsTabProps {
   customer: Customer;
+  onEdit?: () => void;
 }
 
-export const CompanyDetailsTab = ({ customer }: CompanyDetailsTabProps) => {
+export const CompanyDetailsTab = ({ customer, onEdit }: CompanyDetailsTabProps) => {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Company Details</CardTitle>
+        {onEdit && (
+          <Button onClick={onEdit} size="sm">Edit Customer</Button>
+        )}
       </CardHeader>
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>

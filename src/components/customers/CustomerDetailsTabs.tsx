@@ -5,14 +5,18 @@ import { CompanyDetailsTab } from "./CompanyDetailsTab";
 import { ContactDetailsTab } from "./ContactDetailsTab";
 import { BankDetailsTab } from "./BankDetailsTab";
 import { Badge } from "@/components/ui/badge";
-import { Circle, CircleDot } from "lucide-react";
 
 interface CustomerDetailsTabsProps {
   customer: Customer;
   paymentStatus?: "paid" | "pending" | "overdue";
+  onEdit?: () => void;
 }
 
-export const CustomerDetailsTabs = ({ customer, paymentStatus = "pending" }: CustomerDetailsTabsProps) => {
+export const CustomerDetailsTabs = ({ 
+  customer, 
+  paymentStatus = "pending",
+  onEdit 
+}: CustomerDetailsTabsProps) => {
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
@@ -33,7 +37,7 @@ export const CustomerDetailsTabs = ({ customer, paymentStatus = "pending" }: Cus
         </TabsList>
 
         <TabsContent value="company">
-          <CompanyDetailsTab customer={customer} />
+          <CompanyDetailsTab customer={customer} onEdit={onEdit} />
         </TabsContent>
 
         <TabsContent value="contact">

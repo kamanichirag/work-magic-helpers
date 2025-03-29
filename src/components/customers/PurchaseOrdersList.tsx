@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Table, 
@@ -25,7 +24,7 @@ import {
 } from "@/components/ui/card";
 import { PurchaseOrder, PurchaseOrderItem } from "@/types/customer";
 import { Badge } from "@/components/ui/badge";
-import { Circle, CircleDot, Plus, Import } from "lucide-react";
+import { Circle, CircleDot } from "lucide-react";
 
 interface PurchaseOrdersListProps {
   purchaseOrders: PurchaseOrder[];
@@ -41,16 +40,6 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
           <div>
             <CardTitle>Purchase Order History</CardTitle>
             <CardDescription>View and manage customer purchase orders</CardDescription>
-          </div>
-          <div className="flex space-x-2">
-            <Button size="sm" className="flex items-center">
-              <Import className="mr-1" size={16} />
-              Import PO
-            </Button>
-            <Button size="sm" className="flex items-center">
-              <Plus className="mr-1" size={16} />
-              Create S/O
-            </Button>
           </div>
         </div>
       </CardHeader>
