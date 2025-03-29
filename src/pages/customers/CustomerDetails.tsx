@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { CustomerForm } from "@/components/customers/CustomerForm";
 import { customerData } from "@/data/customerData";
-import { Customer } from "@/types/customer";
+import { Customer, PurchaseOrder } from "@/types/customer";
 import { PurchaseOrdersList } from "@/components/customers/PurchaseOrdersList";
 import { CustomerDetailsTabs } from "@/components/customers/CustomerDetailsTabs";
 import { 
@@ -19,10 +19,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Trash2 } from "lucide-react";
+import { Trash2, Plus, Import } from "lucide-react";
 
 // Sample purchase order data for demonstration
-const samplePurchaseOrders = [
+const samplePurchaseOrders: PurchaseOrder[] = [
   {
     id: "po1",
     date: "2023-09-15",
@@ -35,6 +35,7 @@ const samplePurchaseOrders = [
     shipVia: "FedEx",
     note: "Expedited shipping requested",
     status: "active",
+    paymentStatus: "pending",
     items: [
       {
         id: "item1",
@@ -69,6 +70,7 @@ const samplePurchaseOrders = [
     shipVia: "UPS",
     note: "Temperature controlled shipping required",
     status: "closed",
+    paymentStatus: "paid",
     items: [
       {
         id: "item3",
@@ -144,7 +146,15 @@ const CustomerDetails = () => {
           <h1 className="text-3xl font-bold">{customer.companyName}</h1>
           <p className="text-gray-600">{customer.businessRegistrationNumber}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex space-x-2">
+          <Button size="sm" className="flex items-center">
+            <Import className="mr-1" size={16} />
+            Import PO
+          </Button>
+          <Button size="sm" className="flex items-center">
+            <Plus className="mr-1" size={16} />
+            Create PO
+          </Button>
           {!isEditing ? (
             <>
               <Button onClick={handleEdit}>Edit Customer</Button>

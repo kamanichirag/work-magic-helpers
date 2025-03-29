@@ -63,6 +63,7 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
               <TableHead>P.O.#</TableHead>
               <TableHead>Vendor</TableHead>
               <TableHead>Total</TableHead>
+              <TableHead>Payment</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -90,6 +91,24 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
                   <TableCell>{order.vendor}</TableCell>
                   <TableCell>${order.total.toFixed(2)}</TableCell>
                   <TableCell>
+                    <Badge 
+                      variant={
+                        order.paymentStatus === "paid" 
+                          ? "default" 
+                          : order.paymentStatus === "overdue" 
+                            ? "destructive" 
+                            : "secondary"
+                      }
+                      className="px-2 py-1"
+                    >
+                      {order.paymentStatus === "paid" 
+                        ? "Paid" 
+                        : order.paymentStatus === "overdue" 
+                          ? "Overdue" 
+                          : "Pending"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button 
@@ -116,6 +135,22 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
                                   Closed
                                 </span>
                               )}
+                            </Badge>
+                            <Badge 
+                              className="ml-2"
+                              variant={
+                                order.paymentStatus === "paid" 
+                                  ? "default" 
+                                  : order.paymentStatus === "overdue" 
+                                    ? "destructive" 
+                                    : "secondary"
+                              }
+                            >
+                              {order.paymentStatus === "paid" 
+                                ? "Paid" 
+                                : order.paymentStatus === "overdue" 
+                                  ? "Overdue" 
+                                  : "Payment Pending"}
                             </Badge>
                           </DialogTitle>
                         </DialogHeader>
@@ -173,7 +208,7 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-6">
+                <TableCell colSpan={7} className="text-center py-6">
                   No purchase orders found for this customer
                 </TableCell>
               </TableRow>

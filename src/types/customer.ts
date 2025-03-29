@@ -49,7 +49,8 @@ export interface PurchaseOrder {
   shipDate: string;
   shipVia: string;
   note: string;
-  status?: "active" | "closed";
+  status: "active" | "closed";
+  paymentStatus?: "paid" | "pending" | "overdue";
   items: PurchaseOrderItem[];
   total: number;
 }
