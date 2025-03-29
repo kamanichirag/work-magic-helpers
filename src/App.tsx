@@ -14,8 +14,9 @@ import CustomersList from "./pages/customers/CustomersList";
 import CustomerDetails from "./pages/customers/CustomerDetails";
 import NewCustomer from "./pages/customers/NewCustomer";
 
-// Placeholder for Vendor Routes
+// Vendor Routes
 import VendorsList from "./pages/vendors/VendorsList";
+import NewVendor from "./pages/vendors/NewVendor";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
                 
                 {/* Vendor Routes */}
                 <Route path="/vendors" element={<VendorsList />} />
+                <Route path="/vendors/new" element={<NewVendor />} />
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
