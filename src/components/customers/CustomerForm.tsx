@@ -104,25 +104,38 @@ export const CustomerForm = ({ initialData, onSubmit, isEditing = false }: Custo
       if (field.includes(".")) {
         const [section, subSection, property] = field.split(".");
         
-        if (section && subSection && property && section in prev) {
-          const sectionObj = prev[section as keyof Customer];
-          if (sectionObj && typeof sectionObj === 'object' && subSection in sectionObj) {
-            const subSectionObj = sectionObj[subSection as keyof typeof sectionObj];
-            if (subSectionObj && typeof subSectionObj === 'object' && property in subSectionObj) {
-              return {
-                ...prev,
-                [section]: {
-                  ...sectionObj,
-                  [subSection]: {
-                    ...subSectionObj,
-                    [property]: value
+        if (section && subSection && property) {
+          if (section in prev) {
+            const sectionObj = prev[section as keyof Customer];
+            if (sectionObj && typeof sectionObj === 'object') {
+              // Make TypeScript happy by ensuring we're dealing with an object
+              const updatedSection = { ...sectionObj };
+              
+              if (subSection in updatedSection) {
+                const subSectionObj = updatedSection[subSection as keyof typeof updatedSection];
+                if (subSectionObj && typeof subSectionObj === 'object') {
+                  // Create a copy of the subsection object
+                  const updatedSubSection = { ...subSectionObj };
+                  
+                  // Update the property
+                  if (property in updatedSubSection) {
+                    updatedSubSection[property as keyof typeof updatedSubSection] = value;
+                    
+                    // Update the section with the new subsection
+                    updatedSection[subSection as keyof typeof updatedSection] = updatedSubSection;
+                    
+                    // Return the updated state
+                    return {
+                      ...prev,
+                      [section]: updatedSection
+                    };
                   }
                 }
-              };
+              }
             }
           }
+          return prev;
         }
-        return prev;
       }
       
       // Handle top-level fields
