@@ -28,6 +28,14 @@ const NewVendor = () => {
       </div>
       
       <VendorForm onSubmit={handleSubmit} />
+
+      <style jsx global>{`
+        .writing-vertical {
+          writing-mode: vertical-lr;
+          transform: rotate(180deg);
+          text-orientation: mixed;
+        }
+      `}</style>
     </div>
   );
 };

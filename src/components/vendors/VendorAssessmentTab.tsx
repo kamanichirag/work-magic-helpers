@@ -2,14 +2,22 @@
 import { Vendor } from "@/types/vendor";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { 
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface VendorAssessmentTabProps {
   formData: Vendor;
@@ -54,8 +62,13 @@ export const VendorAssessmentTab = ({ formData, handleChange }: VendorAssessment
     }
   };
 
-  // Function to handle response changes
-  const handleResponseChange = (section: string, field: string, value: string) => {
+  // Function to handle response changes for text inputs
+  const handleTextResponseChange = (section: string, field: string, value: string) => {
+    handleChange(`assessment.${section}.${field}.response`, value);
+  };
+
+  // Function to handle response changes for radio/checkbox inputs
+  const handleCheckboxResponseChange = (section: string, field: string, value: string) => {
     handleChange(`assessment.${section}.${field}.response`, value);
   };
 
@@ -64,283 +77,261 @@ export const VendorAssessmentTab = ({ formData, handleChange }: VendorAssessment
     handleChange(`assessment.${section}.${field}.remarks`, value);
   };
 
-  // Question component for yes/no/na questions
-  const AssessmentQuestion = ({ 
-    section, 
-    field, 
-    question, 
-    response, 
-    remarks 
-  }: { 
+  // Table questions component for sections
+  const AssessmentTable = ({
+    title,
+    section,
+    questions
+  }: {
+    title: string;
     section: string;
-    field: string;
-    question: string;
-    response: string;
-    remarks: string;
+    questions: {
+      field: string;
+      question: string;
+      type: "text" | "checkbox";
+    }[];
   }) => (
-    <div className="mb-6 border p-4 rounded-md">
-      <p className="mb-3 font-medium">{question}</p>
-      <div className="mb-3">
-        <Label className="mb-2 block">Response</Label>
-        <RadioGroup 
-          value={response}
-          onValueChange={(value) => handleResponseChange(section, field, value)}
-          className="flex space-x-4"
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="Yes" id={`${section}-${field}-yes`} />
-            <Label htmlFor={`${section}-${field}-yes`}>Yes</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="No" id={`${section}-${field}-no`} />
-            <Label htmlFor={`${section}-${field}-no`}>No</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="Not Applicable" id={`${section}-${field}-na`} />
-            <Label htmlFor={`${section}-${field}-na`}>Not Applicable</Label>
-          </div>
-        </RadioGroup>
-      </div>
-      <div>
-        <Label htmlFor={`${section}-${field}-remarks`} className="mb-2 block">Remarks</Label>
-        <Textarea 
-          id={`${section}-${field}-remarks`}
-          value={remarks}
-          onChange={(e) => handleRemarksChange(section, field, e.target.value)}
-          placeholder="Enter remarks"
-        />
+    <div className="mb-8">
+      <h3 className="text-lg font-semibold mb-4">{title}</h3>
+      <div className="border rounded-md overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-1/4 font-bold text-black">{title.toUpperCase()}</TableHead>
+              <TableHead className="w-2/5 font-bold text-black">INFORMATION REQUESTED</TableHead>
+              <TableHead className="w-1/6 font-bold text-black">RESPONSE</TableHead>
+              <TableHead className="w-1/4 font-bold text-black">REMARKS</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {questions.map((q, index) => (
+              <TableRow key={`${section}-${q.field}`}>
+                {index === 0 ? (
+                  <TableCell className="font-medium align-top" rowSpan={questions.length}>
+                    <div className="writing-vertical text-lg font-semibold h-full flex items-center justify-center">
+                      {title.split(" ").map((word, i) => (
+                        <div key={i} className="my-1">{word}</div>
+                      ))}
+                    </div>
+                  </TableCell>
+                ) : null}
+                <TableCell className="align-top">{q.question}</TableCell>
+                <TableCell className="align-top">
+                  {q.type === "text" ? (
+                    <Input 
+                      value={(assessment[section as keyof typeof assessment] as any)[q.field].response}
+                      onChange={(e) => handleTextResponseChange(section, q.field, e.target.value)}
+                      placeholder="Enter response"
+                      className="w-full"
+                    />
+                  ) : (
+                    <div className="flex flex-col space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id={`${section}-${q.field}-yes`}
+                          checked={(assessment[section as keyof typeof assessment] as any)[q.field].response === "Yes"}
+                          onCheckedChange={() => handleCheckboxResponseChange(section, q.field, "Yes")}
+                        />
+                        <Label htmlFor={`${section}-${q.field}-yes`}>Yes</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id={`${section}-${q.field}-no`}
+                          checked={(assessment[section as keyof typeof assessment] as any)[q.field].response === "No"}
+                          onCheckedChange={() => handleCheckboxResponseChange(section, q.field, "No")}
+                        />
+                        <Label htmlFor={`${section}-${q.field}-no`}>No</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox 
+                          id={`${section}-${q.field}-na`}
+                          checked={(assessment[section as keyof typeof assessment] as any)[q.field].response === "Not Applicable"}
+                          onCheckedChange={() => handleCheckboxResponseChange(section, q.field, "Not Applicable")}
+                        />
+                        <Label htmlFor={`${section}-${q.field}-na`}>Not Applicable</Label>
+                      </div>
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell className="align-top">
+                  <Textarea 
+                    value={(assessment[section as keyof typeof assessment] as any)[q.field].remarks}
+                    onChange={(e) => handleRemarksChange(section, q.field, e.target.value)}
+                    placeholder="Enter remarks"
+                    className="min-h-[80px] w-full"
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
 
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-4">Vendor Assessment Questionnaire</h3>
+      <h3 className="text-xl font-bold mb-6">Vendor Assessment Questionnaire</h3>
       
-      <Accordion type="single" collapsible className="w-full">
-        <AccordionItem value="department">
-          <AccordionTrigger className="text-lg font-semibold">Department, Organization and Personnel</AccordionTrigger>
-          <AccordionContent>
-            <div className="mb-6 border p-4 rounded-md">
-              <p className="mb-3 font-medium">1. What is the business structure? (Public Limited, Private Limited, Proprietary or Partnership, etc.)</p>
-              <div className="mb-3">
-                <Label htmlFor="business-structure-response" className="mb-2 block">Response</Label>
-                <Input 
-                  id="business-structure-response"
-                  value={assessment.department.businessStructure.response}
-                  onChange={(e) => handleChange("assessment.department.businessStructure.response", e.target.value)}
-                  placeholder="Enter business structure"
-                />
-              </div>
-              <div>
-                <Label htmlFor="business-structure-remarks" className="mb-2 block">Remarks</Label>
-                <Textarea 
-                  id="business-structure-remarks"
-                  value={assessment.department.businessStructure.remarks}
-                  onChange={(e) => handleChange("assessment.department.businessStructure.remarks", e.target.value)}
-                  placeholder="Enter remarks"
-                />
-              </div>
-            </div>
+      <div className="space-y-8">
+        <AssessmentTable 
+          title="Organization and Personnel"
+          section="department"
+          questions={[
+            {
+              field: "businessStructure",
+              question: "What is the business structure? (Public Limited, Private Limited, Proprietary or Partnership, etc.)",
+              type: "text"
+            },
+            {
+              field: "organizationalChart",
+              question: "Is there an organizational chart which accurately represents the organization? Please provide a copy of organizational structure/matrix.",
+              type: "checkbox"
+            },
+            {
+              field: "trainingRecords",
+              question: "How are the training records handled?",
+              type: "checkbox"
+            },
+            {
+              field: "personnelCurricula",
+              question: "Are there personnel curricula (training matrix/plan) established and documented for everyone?",
+              type: "checkbox"
+            },
+            {
+              field: "trainingProgram",
+              question: "Does the training program include new hire training and re-qualification training for personnel?",
+              type: "checkbox"
+            },
+            {
+              field: "externalContractors",
+              question: "Are external contractors/vendors utilized? Are they qualified/approved for use? Is there an SOP that outlines this process?",
+              type: "checkbox"
+            },
+            {
+              field: "qualityManagement",
+              question: "Is there a Quality Management System Available?",
+              type: "checkbox"
+            },
+            {
+              field: "facilityApproved",
+              question: "Is your facility approved by competent authorities and/or licensing authorities? Regulatory Name (If Yes, provide mode details)",
+              type: "checkbox"
+            },
+            {
+              field: "certifications",
+              question: "Are there copies of certifications/licenses available? Provide a copy of all applicable licenses.",
+              type: "checkbox"
+            }
+          ]}
+        />
 
-            <AssessmentQuestion 
-              section="department"
-              field="organizationalChart"
-              question="2. Is there an organizational chart which accurately represents the organization? Please provide a copy of organizational structure/matrix"
-              response={assessment.department.organizationalChart.response}
-              remarks={assessment.department.organizationalChart.remarks}
-            />
+        <AssessmentTable 
+          title="Facility"
+          section="facility"
+          questions={[
+            {
+              field: "security",
+              question: "Is there all required measure to ensure Security and confidentiality to prevent unauthorized access to records/ Storage?",
+              type: "checkbox"
+            },
+            {
+              field: "separateAreas",
+              question: "Are receipt, storage and shipping areas separate or segregated?",
+              type: "checkbox"
+            },
+            {
+              field: "computerApplications",
+              question: "Do you use computer applications for inventory management?",
+              type: "checkbox"
+            },
+            {
+              field: "temperatureMonitored",
+              question: "Is the temperature within the storage area monitored? Controlled?",
+              type: "checkbox"
+            },
+            {
+              field: "fireAlarm",
+              question: "Do you have a fire alarm & control system?",
+              type: "checkbox"
+            },
+            {
+              field: "pestControl",
+              question: "Do you have a pest control program in place?",
+              type: "checkbox"
+            },
+            {
+              field: "cleaningProcedure",
+              question: "Do you have a cleaning procedure in place?",
+              type: "checkbox"
+            }
+          ]}
+        />
 
-            <AssessmentQuestion 
-              section="department"
-              field="trainingRecords"
-              question="3. How are the training records handled?"
-              response={assessment.department.trainingRecords.response}
-              remarks={assessment.department.trainingRecords.remarks}
-            />
+        <AssessmentTable 
+          title="Labeling"
+          section="labeling"
+          questions={[
+            {
+              field: "overLabelling",
+              question: "Do you carry out over-labelling / extension date labelling of clinical trial material?",
+              type: "checkbox"
+            },
+            {
+              field: "inHousePrinting",
+              question: "Do you print labels in-house?",
+              type: "checkbox"
+            }
+          ]}
+        />
 
-            <AssessmentQuestion 
-              section="department"
-              field="personnelCurricula"
-              question="4. Are there personnel curricula (training matrix/plan) established and documented for everyone?"
-              response={assessment.department.personnelCurricula.response}
-              remarks={assessment.department.personnelCurricula.remarks}
-            />
+        <AssessmentTable 
+          title="Comparator Sourcing"
+          section="comparatorSourcing"
+          questions={[
+            {
+              field: "sourceProducts",
+              question: "Do you source comparator products from local market as well as outside your country?",
+              type: "checkbox"
+            },
+            {
+              field: "providePedigree",
+              question: "Do you provide Pedigree?",
+              type: "checkbox"
+            },
+            {
+              field: "provideCoA",
+              question: "Do You Provide CoA or MSDS?",
+              type: "checkbox"
+            }
+          ]}
+        />
 
-            <AssessmentQuestion 
-              section="department"
-              field="trainingProgram"
-              question="5. Does the training program include new hire training and re-qualification training for personnel?"
-              response={assessment.department.trainingProgram.response}
-              remarks={assessment.department.trainingProgram.remarks}
-            />
+        <AssessmentTable 
+          title="Records And Reports"
+          section="recordsAndReports"
+          questions={[
+            {
+              field: "documentationControl",
+              question: "A documentation control system exists and is functional properties are described?",
+              type: "checkbox"
+            },
+            {
+              field: "archivalProcedures",
+              question: "Do you have archival procedures? Please mention the records archival period.",
+              type: "checkbox"
+            }
+          ]}
+        />
+      </div>
 
-            <AssessmentQuestion 
-              section="department"
-              field="externalContractors"
-              question="6. Are external contractors/vendors utilized? Are they qualified/approved for use? Is there an SOP that outlines this process?"
-              response={assessment.department.externalContractors.response}
-              remarks={assessment.department.externalContractors.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="department"
-              field="qualityManagement"
-              question="7. Is there a Quality Management System Available"
-              response={assessment.department.qualityManagement.response}
-              remarks={assessment.department.qualityManagement.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="department"
-              field="facilityApproved"
-              question="8. Is your facility approved by competent authorities and/or licensing authorities? Regulatory Name (If Yes, provide mode details)"
-              response={assessment.department.facilityApproved.response}
-              remarks={assessment.department.facilityApproved.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="department"
-              field="certifications"
-              question="9. Are there copies of certifications/licenses available? Provide a copy of all applicable licenses."
-              response={assessment.department.certifications.response}
-              remarks={assessment.department.certifications.remarks}
-            />
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="facility">
-          <AccordionTrigger className="text-lg font-semibold">Facility</AccordionTrigger>
-          <AccordionContent>
-            <AssessmentQuestion 
-              section="facility"
-              field="security"
-              question="1. Is there all required measure to ensure Security and confidentiality to prevent unauthorized access to records/ Storage"
-              response={assessment.facility.security.response}
-              remarks={assessment.facility.security.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="facility"
-              field="separateAreas"
-              question="2. Are receipt, storage and shipping areas separate or segregated"
-              response={assessment.facility.separateAreas.response}
-              remarks={assessment.facility.separateAreas.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="facility"
-              field="computerApplications"
-              question="3. Do you use computer applications for inventory management"
-              response={assessment.facility.computerApplications.response}
-              remarks={assessment.facility.computerApplications.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="facility"
-              field="temperatureMonitored"
-              question="4. Is the temperature within the storage area monitored? Controlled?"
-              response={assessment.facility.temperatureMonitored.response}
-              remarks={assessment.facility.temperatureMonitored.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="facility"
-              field="fireAlarm"
-              question="5. Do you have a fire alarm & control system"
-              response={assessment.facility.fireAlarm.response}
-              remarks={assessment.facility.fireAlarm.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="facility"
-              field="pestControl"
-              question="6. Do you have a pest control program in place?"
-              response={assessment.facility.pestControl.response}
-              remarks={assessment.facility.pestControl.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="facility"
-              field="cleaningProcedure"
-              question="7. Do you have a cleaning procedure in place?"
-              response={assessment.facility.cleaningProcedure.response}
-              remarks={assessment.facility.cleaningProcedure.remarks}
-            />
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="labeling">
-          <AccordionTrigger className="text-lg font-semibold">Labeling</AccordionTrigger>
-          <AccordionContent>
-            <AssessmentQuestion 
-              section="labeling"
-              field="overLabelling"
-              question="1. Do you carry out over-labelling / extension date labelling of clinical trial material"
-              response={assessment.labeling.overLabelling.response}
-              remarks={assessment.labeling.overLabelling.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="labeling"
-              field="inHousePrinting"
-              question="2. Do you print labels in-house?"
-              response={assessment.labeling.inHousePrinting.response}
-              remarks={assessment.labeling.inHousePrinting.remarks}
-            />
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="comparatorSourcing">
-          <AccordionTrigger className="text-lg font-semibold">Comparator Sourcing</AccordionTrigger>
-          <AccordionContent>
-            <AssessmentQuestion 
-              section="comparatorSourcing"
-              field="sourceProducts"
-              question="1. Do you source comparator products from local market as well as outside your country"
-              response={assessment.comparatorSourcing.sourceProducts.response}
-              remarks={assessment.comparatorSourcing.sourceProducts.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="comparatorSourcing"
-              field="providePedigree"
-              question="2. Do you provide Pedigree?"
-              response={assessment.comparatorSourcing.providePedigree.response}
-              remarks={assessment.comparatorSourcing.providePedigree.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="comparatorSourcing"
-              field="provideCoA"
-              question="3. Do You Provide CoA or MSDS?"
-              response={assessment.comparatorSourcing.provideCoA.response}
-              remarks={assessment.comparatorSourcing.provideCoA.remarks}
-            />
-          </AccordionContent>
-        </AccordionItem>
-
-        <AccordionItem value="recordsAndReports">
-          <AccordionTrigger className="text-lg font-semibold">Records And Reports</AccordionTrigger>
-          <AccordionContent>
-            <AssessmentQuestion 
-              section="recordsAndReports"
-              field="documentationControl"
-              question="1. A documentation control system exists and is functional properties are described?"
-              response={assessment.recordsAndReports.documentationControl.response}
-              remarks={assessment.recordsAndReports.documentationControl.remarks}
-            />
-
-            <AssessmentQuestion 
-              section="recordsAndReports"
-              field="archivalProcedures"
-              question="2. Do you have archival procedures? Please mention the records archival period."
-              response={assessment.recordsAndReports.archivalProcedures.response}
-              remarks={assessment.recordsAndReports.archivalProcedures.remarks}
-            />
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      <style jsx global>{`
+        .writing-vertical {
+          writing-mode: vertical-lr;
+          transform: rotate(180deg);
+          text-orientation: mixed;
+        }
+      `}</style>
     </div>
   );
 };
