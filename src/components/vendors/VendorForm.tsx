@@ -6,6 +6,7 @@ import { Vendor } from "@/types/vendor";
 import { CompanyInfoTab } from "./CompanyInfoTab";
 import { ContactsTab } from "./ContactsTab";
 import { BankInfoTab } from "./BankInfoTab";
+import { VendorAssessmentTab } from "./VendorAssessmentTab";
 
 interface VendorFormProps {
   initialData?: Vendor;
@@ -41,6 +42,41 @@ export const VendorForm = ({ initialData, onSubmit, isEditing = false }: VendorF
         swiftCode: "",
         iban: "",
         routingNumber: ""
+      },
+      assessment: {
+        department: {
+          businessStructure: { response: "", remarks: "" },
+          organizationalChart: { response: "", remarks: "" },
+          trainingRecords: { response: "", remarks: "" },
+          personnelCurricula: { response: "", remarks: "" },
+          trainingProgram: { response: "", remarks: "" },
+          externalContractors: { response: "", remarks: "" },
+          qualityManagement: { response: "", remarks: "" },
+          facilityApproved: { response: "", remarks: "" },
+          certifications: { response: "", remarks: "" },
+        },
+        facility: {
+          security: { response: "", remarks: "" },
+          separateAreas: { response: "", remarks: "" },
+          computerApplications: { response: "", remarks: "" },
+          temperatureMonitored: { response: "", remarks: "" },
+          fireAlarm: { response: "", remarks: "" },
+          pestControl: { response: "", remarks: "" },
+          cleaningProcedure: { response: "", remarks: "" },
+        },
+        labeling: {
+          overLabelling: { response: "", remarks: "" },
+          inHousePrinting: { response: "", remarks: "" },
+        },
+        comparatorSourcing: {
+          sourceProducts: { response: "", remarks: "" },
+          providePedigree: { response: "", remarks: "" },
+          provideCoA: { response: "", remarks: "" },
+        },
+        recordsAndReports: {
+          documentationControl: { response: "", remarks: "" },
+          archivalProcedures: { response: "", remarks: "" },
+        }
       }
     }
   );
@@ -49,9 +85,11 @@ export const VendorForm = ({ initialData, onSubmit, isEditing = false }: VendorF
     setFormData((prev) => {
       // Handle nested fields
       if (field.includes(".")) {
-        const [section, subSection, property] = field.split(".");
+        const parts = field.split(".");
         
-        if (section && subSection && property) {
+        if (parts.length === 3) {
+          const [section, subSection, property] = parts;
+          
           return {
             ...prev,
             [section]: {
@@ -59,6 +97,22 @@ export const VendorForm = ({ initialData, onSubmit, isEditing = false }: VendorF
               [subSection]: {
                 ...(prev[section as keyof Vendor] as any)[subSection],
                 [property]: value
+              }
+            }
+          };
+        } else if (parts.length === 4) {
+          const [section, category, field, property] = parts;
+          
+          return {
+            ...prev,
+            [section]: {
+              ...prev[section as keyof Vendor] as object,
+              [category]: {
+                ...(prev[section as keyof Vendor] as any)[category],
+                [field]: {
+                  ...(prev[section as keyof Vendor] as any)[category][field],
+                  [property]: value
+                }
               }
             }
           };
@@ -85,6 +139,7 @@ export const VendorForm = ({ initialData, onSubmit, isEditing = false }: VendorF
           <TabsTrigger value="company">Company Details</TabsTrigger>
           <TabsTrigger value="contact">Contact Details</TabsTrigger>
           <TabsTrigger value="bank">Bank Details</TabsTrigger>
+          <TabsTrigger value="assessment">Assessment</TabsTrigger>
         </TabsList>
 
         <TabsContent value="company">
@@ -97,6 +152,10 @@ export const VendorForm = ({ initialData, onSubmit, isEditing = false }: VendorF
 
         <TabsContent value="bank">
           <BankInfoTab formData={formData} handleChange={handleChange} />
+        </TabsContent>
+
+        <TabsContent value="assessment">
+          <VendorAssessmentTab formData={formData} handleChange={handleChange} />
         </TabsContent>
       </Tabs>
 
