@@ -4,12 +4,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { 
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import {
   Table,
   TableBody,
@@ -96,8 +90,8 @@ export const VendorAssessmentTab = ({ formData, handleChange }: VendorAssessment
       <div className="border rounded-md overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead className="w-1/4 font-bold text-black">{title.toUpperCase()}</TableHead>
+            <TableRow className="bg-gray-100">
+              <TableHead className="w-1/6 font-bold text-black text-center">DEPARTMENT</TableHead>
               <TableHead className="w-2/5 font-bold text-black">INFORMATION REQUESTED</TableHead>
               <TableHead className="w-1/6 font-bold text-black">RESPONSE</TableHead>
               <TableHead className="w-1/4 font-bold text-black">REMARKS</TableHead>
@@ -105,24 +99,26 @@ export const VendorAssessmentTab = ({ formData, handleChange }: VendorAssessment
           </TableHeader>
           <TableBody>
             {questions.map((q, index) => (
-              <TableRow key={`${section}-${q.field}`}>
+              <TableRow key={`${section}-${q.field}`} className="border-b">
                 {index === 0 ? (
-                  <TableCell className="font-medium align-top" rowSpan={questions.length}>
-                    <div className="writing-vertical text-lg font-semibold h-full flex items-center justify-center">
-                      {title.split(" ").map((word, i) => (
-                        <div key={i} className="my-1">{word}</div>
-                      ))}
+                  <TableCell 
+                    className="font-medium align-middle text-center border-r" 
+                    rowSpan={questions.length}
+                  >
+                    <div className="writing-vertical h-full flex flex-col items-center justify-center">
+                      {title.toUpperCase()}
                     </div>
                   </TableCell>
                 ) : null}
-                <TableCell className="align-top">{q.question}</TableCell>
-                <TableCell className="align-top">
+                <TableCell className="align-top border-r p-4">{q.question}</TableCell>
+                <TableCell className="align-top border-r p-4">
                   {q.type === "text" ? (
-                    <Input 
+                    <Textarea 
                       value={(assessment[section as keyof typeof assessment] as any)[q.field].response}
                       onChange={(e) => handleTextResponseChange(section, q.field, e.target.value)}
                       placeholder="Enter response"
                       className="w-full"
+                      rows={5}
                     />
                   ) : (
                     <div className="flex flex-col space-y-2">
@@ -153,7 +149,7 @@ export const VendorAssessmentTab = ({ formData, handleChange }: VendorAssessment
                     </div>
                   )}
                 </TableCell>
-                <TableCell className="align-top">
+                <TableCell className="align-top p-4">
                   <Textarea 
                     value={(assessment[section as keyof typeof assessment] as any)[q.field].remarks}
                     onChange={(e) => handleRemarksChange(section, q.field, e.target.value)}
@@ -328,9 +324,8 @@ export const VendorAssessmentTab = ({ formData, handleChange }: VendorAssessment
       <style>
         {`
         .writing-vertical {
-          writing-mode: vertical-lr;
+          writing-mode: vertical-rl;
           transform: rotate(180deg);
-          text-orientation: mixed;
         }
         `}
       </style>

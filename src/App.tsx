@@ -17,6 +17,7 @@ import NewCustomer from "./pages/customers/NewCustomer";
 // Vendor Routes
 import VendorsList from "./pages/vendors/VendorsList";
 import NewVendor from "./pages/vendors/NewVendor";
+import VendorDetails from "./pages/vendors/VendorDetails";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
                 {/* Vendor Routes */}
                 <Route path="/vendors" element={<VendorsList />} />
                 <Route path="/vendors/new" element={<NewVendor />} />
+                <Route path="/vendors/:id" element={<VendorDetails />} />
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
