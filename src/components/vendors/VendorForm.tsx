@@ -1,12 +1,11 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
 import { Vendor } from "@/types/vendor";
-import { CompanyInfoTab } from "./CompanyInfoTab";
-import { ContactsTab } from "./ContactsTab";
-import { BankInfoTab } from "./BankInfoTab";
-import { VendorAssessmentTab } from "./VendorAssessmentTab";
 
 interface VendorFormProps {
   initialData?: Vendor;
@@ -42,89 +41,15 @@ export const VendorForm = ({ initialData, onSubmit, isEditing = false }: VendorF
         swiftCode: "",
         iban: "",
         routingNumber: ""
-      },
-      assessment: {
-        department: {
-          businessStructure: { response: "", remarks: "" },
-          organizationalChart: { response: "", remarks: "" },
-          trainingRecords: { response: "", remarks: "" },
-          personnelCurricula: { response: "", remarks: "" },
-          trainingProgram: { response: "", remarks: "" },
-          externalContractors: { response: "", remarks: "" },
-          qualityManagement: { response: "", remarks: "" },
-          facilityApproved: { response: "", remarks: "" },
-          certifications: { response: "", remarks: "" },
-        },
-        facility: {
-          security: { response: "", remarks: "" },
-          separateAreas: { response: "", remarks: "" },
-          computerApplications: { response: "", remarks: "" },
-          temperatureMonitored: { response: "", remarks: "" },
-          fireAlarm: { response: "", remarks: "" },
-          pestControl: { response: "", remarks: "" },
-          cleaningProcedure: { response: "", remarks: "" },
-        },
-        labeling: {
-          overLabelling: { response: "", remarks: "" },
-          inHousePrinting: { response: "", remarks: "" },
-        },
-        comparatorSourcing: {
-          sourceProducts: { response: "", remarks: "" },
-          providePedigree: { response: "", remarks: "" },
-          provideCoA: { response: "", remarks: "" },
-        },
-        recordsAndReports: {
-          documentationControl: { response: "", remarks: "" },
-          archivalProcedures: { response: "", remarks: "" },
-        }
       }
     }
   );
 
   const handleChange = (field: string, value: any) => {
-    setFormData((prev) => {
-      // Handle nested fields
-      if (field.includes(".")) {
-        const parts = field.split(".");
-        
-        if (parts.length === 3) {
-          const [section, subSection, property] = parts;
-          
-          return {
-            ...prev,
-            [section]: {
-              ...prev[section as keyof Vendor] as object,
-              [subSection]: {
-                ...(prev[section as keyof Vendor] as any)[subSection],
-                [property]: value
-              }
-            }
-          };
-        } else if (parts.length === 4) {
-          const [section, category, field, property] = parts;
-          
-          return {
-            ...prev,
-            [section]: {
-              ...prev[section as keyof Vendor] as object,
-              [category]: {
-                ...(prev[section as keyof Vendor] as any)[category],
-                [field]: {
-                  ...(prev[section as keyof Vendor] as any)[category][field],
-                  [property]: value
-                }
-              }
-            }
-          };
-        }
-      }
-      
-      // Handle top-level fields
-      return {
-        ...prev,
-        [field]: value
-      };
-    });
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -134,30 +59,97 @@ export const VendorForm = ({ initialData, onSubmit, isEditing = false }: VendorF
 
   return (
     <form id="vendor-form" onSubmit={handleSubmit} className="space-y-6">
-      <Tabs defaultValue="company">
-        <TabsList className="mb-6">
-          <TabsTrigger value="company">Company Details</TabsTrigger>
-          <TabsTrigger value="contact">Contact Details</TabsTrigger>
-          <TabsTrigger value="bank">Bank Details</TabsTrigger>
-          <TabsTrigger value="assessment">Assessment</TabsTrigger>
-        </TabsList>
+      <Card>
+        <CardContent className="grid gap-6 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="vendorName">Name of Vendor</Label>
+              <Input 
+                id="vendorName" 
+                required
+                value={formData.vendorName} 
+                onChange={(e) => handleChange("vendorName", e.target.value)} 
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="companyOrganization">Company/Organization</Label>
+              <Input 
+                id="companyOrganization" 
+                value={formData.companyOrganization} 
+                onChange={(e) => handleChange("companyOrganization", e.target.value)} 
+              />
+            </div>
+          </div>
 
-        <TabsContent value="company">
-          <CompanyInfoTab formData={formData} handleChange={handleChange} />
-        </TabsContent>
+          <div className="grid gap-2">
+            <Label htmlFor="address">Address</Label>
+            <Textarea 
+              id="address" 
+              rows={3}
+              value={formData.address} 
+              onChange={(e) => handleChange("address", e.target.value)} 
+            />
+          </div>
 
-        <TabsContent value="contact">
-          <ContactsTab formData={formData} handleChange={handleChange} />
-        </TabsContent>
+          <div className="grid gap-2">
+            <Label htmlFor="servicesOffered">Services Offered / To Be Rendered</Label>
+            <Textarea 
+              id="servicesOffered" 
+              rows={3}
+              value={formData.servicesOffered} 
+              onChange={(e) => handleChange("servicesOffered", e.target.value)} 
+            />
+          </div>
 
-        <TabsContent value="bank">
-          <BankInfoTab formData={formData} handleChange={handleChange} />
-        </TabsContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="contactPerson">Contact Person</Label>
+              <Input 
+                id="contactPerson" 
+                value={formData.contactPerson} 
+                onChange={(e) => handleChange("contactPerson", e.target.value)} 
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="contactNumber">Contact No.</Label>
+              <Input 
+                id="contactNumber" 
+                value={formData.contactNumber} 
+                onChange={(e) => handleChange("contactNumber", e.target.value)} 
+              />
+            </div>
+          </div>
 
-        <TabsContent value="assessment">
-          <VendorAssessmentTab formData={formData} handleChange={handleChange} />
-        </TabsContent>
-      </Tabs>
+          <div className="grid gap-2">
+            <Label htmlFor="emailId">Email ID</Label>
+            <Input 
+              id="emailId" 
+              type="email"
+              value={formData.emailId} 
+              onChange={(e) => handleChange("emailId", e.target.value)} 
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid gap-2">
+              <Label htmlFor="qaExecutiveName">Quality Assurance Executive Contact Person</Label>
+              <Input 
+                id="qaExecutiveName" 
+                value={formData.qaExecutiveName} 
+                onChange={(e) => handleChange("qaExecutiveName", e.target.value)} 
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="qaExecutiveContact">Quality Assurance Executive Contact Details</Label>
+              <Input 
+                id="qaExecutiveContact" 
+                value={formData.qaExecutiveContact} 
+                onChange={(e) => handleChange("qaExecutiveContact", e.target.value)} 
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {!isEditing && (
         <div className="flex justify-end gap-2">
