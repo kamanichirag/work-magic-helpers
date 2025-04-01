@@ -130,6 +130,38 @@ export interface Vendor {
       };
     };
   };
+  documents?: {
+    regulatoryLicense: "Yes" | "No" | "N/A" | "";
+    listOfSOP: "Yes" | "No" | "N/A" | "";
+    organizationChart: "Yes" | "No" | "N/A" | "";
+    otherDocuments: "Yes" | "No" | "N/A" | "";
+    regulatoryLicenseRemarks: string;
+    listOfSOPRemarks: string;
+    organizationChartRemarks: string;
+    otherDocumentsRemarks: string;
+  };
+  authorization?: {
+    companyName: string;
+    name: string;
+    title: string;
+    signature: string;
+    date: string;
+  };
+  jupiterSection?: {
+    physicalInspection: string;
+    services: string;
+    vendorApproved: "Approved" | "Rejected" | "Re-Qualification" | "";
+    remarks: string;
+    effectiveDate: string;
+    auditCertificateDate: string;
+    requalificationDate: string;
+    preparedByName: string;
+    preparedByTitle: string;
+    preparedBySignature: string;
+    approvedByName: string;
+    approvedByTitle: string;
+    approvedBySignature: string;
+  };
 }
 
 export interface ContactPerson {

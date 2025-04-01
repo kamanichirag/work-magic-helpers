@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { VendorForm } from "@/components/vendors/VendorForm";
 import { VendorAssessmentTab } from "@/components/vendors/VendorAssessmentTab";
+import { VendorDocumentsSection } from "@/components/vendors/VendorDocumentsSection";
 import { Vendor } from "@/types/vendor";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -93,9 +94,10 @@ const NewVendor = () => {
           onValueChange={setActiveTab}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="basic">Basic Information</TabsTrigger>
             <TabsTrigger value="assessment">Assessment</TabsTrigger>
+            <TabsTrigger value="documents">Documents & Authorization</TabsTrigger>
           </TabsList>
           <TabsContent value="basic" className="p-6">
             <VendorForm 
@@ -117,6 +119,20 @@ const NewVendor = () => {
             />
             <div className="flex justify-between mt-6">
               <Button variant="outline" onClick={() => setActiveTab("basic")}>
+                Back
+              </Button>
+              <Button onClick={() => setActiveTab("documents")}>
+                Next: Documents & Authorization
+              </Button>
+            </div>
+          </TabsContent>
+          <TabsContent value="documents" className="p-6">
+            <VendorDocumentsSection
+              formData={formData}
+              handleChange={handleChange}
+            />
+            <div className="flex justify-between mt-6">
+              <Button variant="outline" onClick={() => setActiveTab("assessment")}>
                 Back
               </Button>
               <Button onClick={handleSubmit}>
