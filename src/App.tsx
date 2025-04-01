@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { useState } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -19,40 +20,43 @@ import VendorsList from "./pages/vendors/VendorsList";
 import NewVendor from "./pages/vendors/NewVendor";
 import VendorDetails from "./pages/vendors/VendorDetails";
 
-const queryClient = new QueryClient();
+const App = () => {
+  // Initialize queryClient with useState to ensure it's properly created in the component lifecycle
+  const [queryClient] = useState(() => new QueryClient());
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <SidebarProvider>
-          <div className="flex w-full min-h-screen bg-blue-50">
-            <AppSidebar />
-            <div className="flex-1 overflow-auto">
-              <Routes>
-                <Route path="/" element={<Index />} />
-                
-                {/* Customer Routes */}
-                <Route path="/customers" element={<CustomersList />} />
-                <Route path="/customers/new" element={<NewCustomer />} />
-                <Route path="/customers/:id" element={<CustomerDetails />} />
-                
-                {/* Vendor Routes */}
-                <Route path="/vendors" element={<VendorsList />} />
-                <Route path="/vendors/new" element={<NewVendor />} />
-                <Route path="/vendors/:id" element={<VendorDetails />} />
-                
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <SidebarProvider>
+            <div className="flex w-full min-h-screen bg-blue-50">
+              <AppSidebar />
+              <div className="flex-1 overflow-auto">
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  
+                  {/* Customer Routes */}
+                  <Route path="/customers" element={<CustomersList />} />
+                  <Route path="/customers/new" element={<NewCustomer />} />
+                  <Route path="/customers/:id" element={<CustomerDetails />} />
+                  
+                  {/* Vendor Routes */}
+                  <Route path="/vendors" element={<VendorsList />} />
+                  <Route path="/vendors/new" element={<NewVendor />} />
+                  <Route path="/vendors/:id" element={<VendorDetails />} />
+                  
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
             </div>
-          </div>
-        </SidebarProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+          </SidebarProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
