@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Search } from "lucide-react";
+import { Search, Mail } from "lucide-react";
 import { customerData } from "@/data/customerData";
+import { toast } from "sonner";
 
 const CustomersList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,6 +16,11 @@ const CustomersList = () => {
     customer.companyName.toLowerCase().includes(searchTerm.toLowerCase()) || 
     customer.businessRegistrationNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleEmail = (email: string) => {
+    window.open(`mailto:${email}`);
+    toast.success("Email client opened");
+  };
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -72,9 +78,19 @@ const CustomersList = () => {
                       <TableCell>{customer.typeOfBusiness}</TableCell>
                       <TableCell>{customer.contactDetails.management.name || "-"}</TableCell>
                       <TableCell>
-                        <Button asChild variant="outline" size="sm">
-                          <Link to={`/customers/${customer.id}`}>View Details</Link>
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button asChild variant="outline" size="sm">
+                            <Link to={`/customers/${customer.id}`}>View Details</Link>
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={() => handleEmail(customer.contactDetails.management.email)}
+                            title="Send Email"
+                          >
+                            <Mail className="h-4 w-4 text-green-500" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { 
@@ -9,6 +10,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Vendor } from "@/types/vendor";
 import { 
   AlertDialog,
@@ -21,7 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, Eye } from "lucide-react";
+import { Plus, Trash2, Eye, Search, Mail } from "lucide-react";
 import { toast } from "sonner";
 
 // Mock data - in a real app this would come from an API
@@ -87,12 +89,32 @@ export const initialVendors: Vendor[] = [
 const VendorsList = () => {
   const [vendors, setVendors] = useState<Vendor[]>(initialVendors);
   const [vendorToDelete, setVendorToDelete] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   
   const handleDelete = (id: string) => {
     setVendors(vendors.filter(vendor => vendor.id !== id));
     toast.success("Vendor deleted successfully");
     setVendorToDelete(null);
+  };
+  
+  const handleEmail = (email: string) => {
+    window.open(`mailto:${email}`);
+    toast.success("Email client opened");
+  };
+
+  const filteredVendors = searchTerm 
+    ? vendors.filter(vendor => 
+        vendor.vendorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vendor.emailId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vendor.contactPerson.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : vendors;
+
+  const handleSearch = () => {
+    // The filtering is already done with the filteredVendors variable,
+    // but we can add additional logic here if needed
+    toast.success(`Searching for: ${searchTerm}`);
   };
   
   return (
@@ -106,6 +128,22 @@ const VendorsList = () => {
         </Button>
       </div>
       
+      <div className="flex gap-2 mb-6">
+        <div className="relative flex-1">
+          <Input
+            type="text"
+            placeholder="Search vendors..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+        </div>
+        <Button onClick={handleSearch} className="w-24">
+          Search
+        </Button>
+      </div>
+      
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <Table>
           <TableHeader>
@@ -114,18 +152,18 @@ const VendorsList = () => {
               <TableHead>Contact Person</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Phone</TableHead>
-              <TableHead className="w-[120px]">Actions</TableHead>
+              <TableHead className="w-[150px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {vendors.length === 0 ? (
+            {filteredVendors.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-6">
-                  No vendors found. Click on "Create New Vendor" to add one.
+                  {searchTerm ? "No vendors found matching your search." : "No vendors found. Click on \"Create New Vendor\" to add one."}
                 </TableCell>
               </TableRow>
             ) : (
-              vendors.map((vendor) => (
+              filteredVendors.map((vendor) => (
                 <TableRow key={vendor.id}>
                   <TableCell className="font-medium">{vendor.vendorName}</TableCell>
                   <TableCell>{vendor.contactPerson}</TableCell>
@@ -137,8 +175,18 @@ const VendorsList = () => {
                         variant="ghost" 
                         size="icon"
                         onClick={() => navigate(`/vendors/${vendor.id}`)}
+                        title="View Details"
                       >
                         <Eye className="h-4 w-4 text-blue-500" />
+                      </Button>
+                      
+                      <Button 
+                        variant="ghost" 
+                        size="icon"
+                        onClick={() => handleEmail(vendor.emailId)}
+                        title="Send Email"
+                      >
+                        <Mail className="h-4 w-4 text-green-500" />
                       </Button>
                       
                       <AlertDialog>
@@ -147,6 +195,7 @@ const VendorsList = () => {
                             variant="ghost" 
                             size="icon"
                             onClick={() => setVendorToDelete(vendor.id)}
+                            title="Delete Vendor"
                           >
                             <Trash2 className="h-4 w-4 text-red-500" />
                           </Button>

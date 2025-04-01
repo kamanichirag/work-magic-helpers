@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Mail } from "lucide-react";
 import { Vendor } from "@/types/vendor";
 import { toast } from "sonner";
 
@@ -60,6 +60,11 @@ const VendorDetails = () => {
     }
   }, [id, navigate]);
 
+  const handleEmail = (email: string) => {
+    window.open(`mailto:${email}`);
+    toast.success("Email client opened");
+  };
+
   if (!vendor) {
     return <div className="container mx-auto py-8 px-4">Loading...</div>;
   }
@@ -75,6 +80,14 @@ const VendorDetails = () => {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <h1 className="text-3xl font-bold">{vendor.vendorName}</h1>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={() => handleEmail(vendor.emailId)}
+          className="ml-auto"
+        >
+          <Mail className="mr-2 h-4 w-4" /> Send Email
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 gap-8">
