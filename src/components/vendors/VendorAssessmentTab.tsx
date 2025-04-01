@@ -165,7 +165,7 @@ export const VendorAssessmentTab = ({
                       {title.toUpperCase()}
                     </div>
                   </TableCell> : null}
-                <TableCell className="align-top border-r p-4 py-[10px]">{q.question}</TableCell>
+                <TableCell className="align-top border-r p-4 py-[8px]">{q.question}</TableCell>
                 <TableCell className="align-top border-r p-4">
                   {q.type === "text" ? <Textarea value={(assessment[section as keyof typeof assessment] as any)[q.field].response} onChange={e => handleTextResponseChange(section, q.field, e.target.value)} placeholder="Enter response" className="w-full" rows={5} /> : <div className="flex flex-col space-y-2">
                       <div className="flex items-center space-x-2">
