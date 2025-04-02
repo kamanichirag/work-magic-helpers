@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,10 +7,8 @@ import { ArrowLeft, Mail } from "lucide-react";
 import { Vendor } from "@/types/vendor";
 import { toast } from "sonner";
 
-// In a real app, this would come from an API
-import { initialVendors } from "./VendorsList";
+import { initialVendors } from "@/utils/vendorUtils";
 
-// Mock order history data
 const mockOrders = [
   {
     id: "ORD-001",
@@ -50,7 +47,6 @@ const VendorDetails = () => {
   const [orders, setOrders] = useState(mockOrders);
 
   useEffect(() => {
-    // In a real app, this would be an API call
     const foundVendor = initialVendors.find(v => v.id === id);
     if (foundVendor) {
       setVendor(foundVendor);
@@ -91,7 +87,6 @@ const VendorDetails = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-8">
-        {/* Vendor Details Section */}
         <Card>
           <CardContent className="p-6">
             <h2 className="text-xl font-semibold mb-4">Vendor Information</h2>
@@ -132,18 +127,15 @@ const VendorDetails = () => {
           </CardContent>
         </Card>
 
-        {/* Assessment Section - Only show if assessment data exists */}
         {vendor.assessment && (
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4">Assessment Information</h2>
-              {/* Here we would display assessment data - simplified for now */}
               <p>Assessment information is available for this vendor.</p>
             </CardContent>
           </Card>
         )}
 
-        {/* Order History Section */}
         <Card>
           <CardContent className="p-6">
             <h2 className="text-xl font-semibold mb-4">Order History</h2>
