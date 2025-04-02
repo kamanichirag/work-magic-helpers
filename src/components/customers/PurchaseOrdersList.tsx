@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { 
   Table, 
@@ -8,6 +9,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { 
   Dialog, 
   DialogContent, 
@@ -24,7 +26,7 @@ import {
 } from "@/components/ui/card";
 import { PurchaseOrder, PurchaseOrderItem } from "@/types/customer";
 import { Badge } from "@/components/ui/badge";
-import { Circle, CircleDot } from "lucide-react";
+import { Circle, CircleDot, Search } from "lucide-react";
 
 interface PurchaseOrdersListProps {
   purchaseOrders: PurchaseOrder[];
@@ -32,14 +34,34 @@ interface PurchaseOrdersListProps {
 
 export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) {
   const [selectedOrder, setSelectedOrder] = useState<PurchaseOrder | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filter purchase orders based on search term
+  const filteredPurchaseOrders = purchaseOrders.filter(order => 
+    order.poNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.vendor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.paymentStatus?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.date.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <CardTitle>Purchase Order History</CardTitle>
             <CardDescription>View and manage customer purchase orders</CardDescription>
+          </div>
+          <div className="relative w-full md:w-[250px]">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              type="text"
+              placeholder="Search purchase orders..."
+              className="pl-8 w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
       </CardHeader>
@@ -57,8 +79,8 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
             </TableRow>
           </TableHeader>
           <TableBody>
-            {purchaseOrders && purchaseOrders.length > 0 ? (
-              purchaseOrders.map((order) => (
+            {filteredPurchaseOrders && filteredPurchaseOrders.length > 0 ? (
+              filteredPurchaseOrders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell>
                     <div className="flex items-center gap-1">
@@ -198,7 +220,9 @@ export function PurchaseOrdersList({ purchaseOrders }: PurchaseOrdersListProps) 
             ) : (
               <TableRow>
                 <TableCell colSpan={7} className="text-center py-6">
-                  No purchase orders found for this customer
+                  {searchTerm ? 
+                    "No matching purchase orders found" : 
+                    "No purchase orders found for this customer"}
                 </TableCell>
               </TableRow>
             )}
