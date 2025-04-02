@@ -23,7 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, Eye, Search, Mail } from "lucide-react";
+import { Plus, Trash2, Eye, Search, Mail, Filter } from "lucide-react";
 import { toast } from "sonner";
 
 // Mock data - in a real app this would come from an API
@@ -107,14 +107,23 @@ const VendorsList = () => {
     ? vendors.filter(vendor => 
         vendor.vendorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         vendor.emailId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        vendor.contactPerson.toLowerCase().includes(searchTerm.toLowerCase())
+        vendor.contactPerson.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vendor.companyOrganization.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        vendor.servicesOffered.toLowerCase().includes(searchTerm.toLowerCase())
       )
     : vendors;
 
   const handleSearch = () => {
-    // The filtering is already done with the filteredVendors variable,
-    // but we can add additional logic here if needed
+    if (searchTerm.trim() === "") {
+      toast.info("Please enter a search term");
+      return;
+    }
     toast.success(`Searching for: ${searchTerm}`);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    toast.info("Search cleared");
   };
   
   return (
@@ -128,20 +137,39 @@ const VendorsList = () => {
         </Button>
       </div>
       
-      <div className="flex gap-2 mb-6">
-        <div className="relative flex-1">
-          <Input
-            type="text"
-            placeholder="Search vendors..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+      <div className="bg-white rounded-lg shadow p-6 mb-6">
+        <h2 className="text-lg font-semibold mb-4">Search Vendors</h2>
+        <div className="flex gap-2 flex-col sm:flex-row">
+          <div className="relative flex-1">
+            <Input
+              type="text"
+              placeholder="Search by name, email, contact person, company..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+          </div>
+          <div className="flex gap-2">
+            <Button onClick={handleSearch} className="w-full sm:w-auto">
+              <Search className="mr-2 h-4 w-4" /> Search
+            </Button>
+            {searchTerm && (
+              <Button 
+                variant="outline" 
+                onClick={handleClearSearch}
+                className="w-full sm:w-auto"
+              >
+                Clear
+              </Button>
+            )}
+          </div>
         </div>
-        <Button onClick={handleSearch} className="w-24">
-          Search
-        </Button>
+        {searchTerm && (
+          <div className="mt-2 text-sm text-muted-foreground">
+            Found {filteredVendors.length} {filteredVendors.length === 1 ? 'vendor' : 'vendors'} matching "{searchTerm}"
+          </div>
+        )}
       </div>
       
       <div className="bg-white rounded-lg shadow overflow-hidden">
