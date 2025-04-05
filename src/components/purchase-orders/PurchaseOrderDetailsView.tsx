@@ -5,8 +5,8 @@ import { PurchaseOrderHeader } from "./PurchaseOrderHeader";
 import { PurchaseOrderItems } from "./PurchaseOrderItems";
 import { PurchaseOrderSummary } from "./PurchaseOrderSummary";
 import { PurchaseOrderHistory } from "./PurchaseOrderHistory";
-import { NotFoundCard } from "@/components/inventory/details/NotFoundCard";
-import { LoadingState } from "@/components/inventory/details/LoadingState";
+import NotFoundCard from "@/components/inventory/details/NotFoundCard";
+import LoadingState from "@/components/inventory/details/LoadingState";
 import { PurchaseOrderInfo } from "@/types/purchase-order";
 
 // Mock data - in a real app, this would come from an API call
