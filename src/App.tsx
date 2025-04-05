@@ -26,6 +26,9 @@ import InventoryList from "./pages/inventory/InventoryList";
 import InventoryDetails from "./pages/inventory/InventoryDetails";
 import NewInventory from "./pages/inventory/NewInventory";
 
+// Purchase Order Routes
+import PurchaseOrderDetails from "./pages/purchase-orders/PurchaseOrderDetails";
+
 const App = () => {
   // Initialize queryClient with useState to ensure it's properly created in the component lifecycle
   const [queryClient] = useState(() => new QueryClient());
@@ -58,6 +61,9 @@ const App = () => {
                     <Route path="/inventory" element={<InventoryList />} />
                     <Route path="/inventory/new" element={<NewInventory />} />
                     <Route path="/inventory/:id" element={<InventoryDetails />} />
+                    
+                    {/* Purchase Order Routes */}
+                    <Route path="/purchase-orders/:id" element={<PurchaseOrderDetails />} />
                     
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                     <Route path="*" element={<NotFound />} />
