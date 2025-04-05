@@ -1,5 +1,5 @@
 
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import NewInventoryForm from "@/components/inventory/NewInventoryForm";
 
 export default function NewInventoryPage() {

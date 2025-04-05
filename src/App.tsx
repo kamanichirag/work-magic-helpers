@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useState } from "react";
+import { HelmetProvider } from "react-helmet-async";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -32,38 +33,40 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <SidebarProvider>
-            <div className="flex w-full min-h-screen bg-blue-50">
-              <AppSidebar />
-              <div className="flex-1 overflow-auto">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  
-                  {/* Customer Routes */}
-                  <Route path="/customers" element={<CustomersList />} />
-                  <Route path="/customers/new" element={<NewCustomer />} />
-                  <Route path="/customers/:id" element={<CustomerDetails />} />
-                  
-                  {/* Vendor Routes */}
-                  <Route path="/vendors" element={<VendorsList />} />
-                  <Route path="/vendors/new" element={<NewVendor />} />
-                  <Route path="/vendors/:id" element={<VendorDetails />} />
-                  
-                  {/* Inventory Routes */}
-                  <Route path="/inventory" element={<InventoryList />} />
-                  <Route path="/inventory/new" element={<NewInventory />} />
-                  <Route path="/inventory/:id" element={<InventoryDetails />} />
-                  
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+        <HelmetProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <SidebarProvider>
+              <div className="flex w-full min-h-screen bg-blue-50">
+                <AppSidebar />
+                <div className="flex-1 overflow-auto">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    
+                    {/* Customer Routes */}
+                    <Route path="/customers" element={<CustomersList />} />
+                    <Route path="/customers/new" element={<NewCustomer />} />
+                    <Route path="/customers/:id" element={<CustomerDetails />} />
+                    
+                    {/* Vendor Routes */}
+                    <Route path="/vendors" element={<VendorsList />} />
+                    <Route path="/vendors/new" element={<NewVendor />} />
+                    <Route path="/vendors/:id" element={<VendorDetails />} />
+                    
+                    {/* Inventory Routes */}
+                    <Route path="/inventory" element={<InventoryList />} />
+                    <Route path="/inventory/new" element={<NewInventory />} />
+                    <Route path="/inventory/:id" element={<InventoryDetails />} />
+                    
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </div>
               </div>
-            </div>
-          </SidebarProvider>
-        </BrowserRouter>
+            </SidebarProvider>
+          </BrowserRouter>
+        </HelmetProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
