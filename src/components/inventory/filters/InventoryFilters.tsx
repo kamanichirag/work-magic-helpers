@@ -45,36 +45,36 @@ export function InventoryFilters({ filter, setFilter }: InventoryFiltersProps) {
             />
           </div>
           
-          <Select onValueChange={(value) => setFilter({ ...filter, supplier: value || undefined })}>
+          <Select onValueChange={(value) => setFilter({ ...filter, supplier: value === "all" ? undefined : value })}>
             <SelectTrigger>
               <SelectValue placeholder="Select Supplier" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Suppliers</SelectItem>
+              <SelectItem value="all">All Suppliers</SelectItem>
               {suppliers.map((supplier) => (
                 <SelectItem key={supplier} value={supplier}>{supplier}</SelectItem>
               ))}
             </SelectContent>
           </Select>
           
-          <Select onValueChange={(value) => setFilter({ ...filter, manufacturer: value || undefined })}>
+          <Select onValueChange={(value) => setFilter({ ...filter, manufacturer: value === "all" ? undefined : value })}>
             <SelectTrigger>
               <SelectValue placeholder="Select Manufacturer" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Manufacturers</SelectItem>
+              <SelectItem value="all">All Manufacturers</SelectItem>
               {manufacturers.map((manufacturer) => (
                 <SelectItem key={manufacturer} value={manufacturer}>{manufacturer}</SelectItem>
               ))}
             </SelectContent>
           </Select>
           
-          <Select onValueChange={(value) => setFilter({ ...filter, location: value || undefined })}>
+          <Select onValueChange={(value) => setFilter({ ...filter, location: value === "all" ? undefined : value })}>
             <SelectTrigger>
               <SelectValue placeholder="Select Location" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Locations</SelectItem>
+              <SelectItem value="all">All Locations</SelectItem>
               {locations.map((location) => (
                 <SelectItem key={location} value={location}>{location}</SelectItem>
               ))}
