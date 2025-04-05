@@ -20,6 +20,11 @@ import VendorsList from "./pages/vendors/VendorsList";
 import NewVendor from "./pages/vendors/NewVendor";
 import VendorDetails from "./pages/vendors/VendorDetails";
 
+// Inventory Routes
+import InventoryList from "./pages/inventory/InventoryList";
+import InventoryDetails from "./pages/inventory/InventoryDetails";
+import NewInventory from "./pages/inventory/NewInventory";
+
 const App = () => {
   // Initialize queryClient with useState to ensure it's properly created in the component lifecycle
   const [queryClient] = useState(() => new QueryClient());
@@ -46,6 +51,11 @@ const App = () => {
                   <Route path="/vendors" element={<VendorsList />} />
                   <Route path="/vendors/new" element={<NewVendor />} />
                   <Route path="/vendors/:id" element={<VendorDetails />} />
+                  
+                  {/* Inventory Routes */}
+                  <Route path="/inventory" element={<InventoryList />} />
+                  <Route path="/inventory/new" element={<NewInventory />} />
+                  <Route path="/inventory/:id" element={<InventoryDetails />} />
                   
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />

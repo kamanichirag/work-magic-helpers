@@ -1,6 +1,6 @@
 
 import { useNavigate, useLocation } from "react-router-dom";
-import { Users, ShoppingBag, Briefcase } from "lucide-react";
+import { Users, ShoppingBag, Briefcase, Package } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -50,6 +50,16 @@ export function AppSidebar() {
                 >
                   <Briefcase className="mr-2" />
                   <span>Vendors</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton 
+                  isActive={isActive("/inventory")}
+                  onClick={() => navigate("/inventory")}
+                  tooltip="Inventory"
+                >
+                  <Package className="mr-2" />
+                  <span>Inventory</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
