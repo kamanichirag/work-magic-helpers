@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
+import { LocationSelector } from "@/components/inventory/LocationSelector";
 
 interface VendorFormProps {
   initialData?: Vendor;
@@ -45,7 +46,8 @@ export const VendorForm = ({
       swiftCode: "",
       iban: "",
       routingNumber: ""
-    }
+    },
+    inventoryLocation: ""
   };
 
   const handleFieldChange = (field: string, value: any) => {
@@ -89,6 +91,14 @@ export const VendorForm = ({
             rows={3}
             value={formData.address} 
             onChange={(e) => handleFieldChange("address", e.target.value)} 
+          />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="inventoryLocation">Inventory Location</Label>
+          <LocationSelector 
+            onLocationSelect={(location) => handleFieldChange("inventoryLocation", location)} 
+            selectedLocation={formData.inventoryLocation}
           />
         </div>
 

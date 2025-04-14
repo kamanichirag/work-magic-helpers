@@ -26,6 +26,7 @@ export interface Vendor {
     iban: string;
     routingNumber: string;
   };
+  inventoryLocation?: string;
   assessment?: {
     department: {
       businessStructure: {

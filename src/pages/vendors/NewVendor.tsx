@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -39,21 +38,17 @@ const NewVendor = () => {
       swiftCode: "",
       iban: "",
       routingNumber: ""
-    }
+    },
+    inventoryLocation: ""
   });
   
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => {
-      // Handle nested fields using a reducer approach
       const keys = field.split('.');
       if (keys.length === 1) {
-        // Simple top-level field
         return { ...prev, [field]: value };
       } else {
-        // Nested field
-        // Create a copy of the state
         const newState = { ...prev };
-        // Navigate to the right place in the object
         let current: any = newState;
         for (let i = 0; i < keys.length - 1; i++) {
           if (!current[keys[i]]) {
@@ -61,7 +56,6 @@ const NewVendor = () => {
           }
           current = current[keys[i]];
         }
-        // Set the value
         current[keys[keys.length - 1]] = value;
         return newState;
       }
@@ -69,7 +63,6 @@ const NewVendor = () => {
   };
 
   const handleSubmit = () => {
-    // In a real app, this would be an API call to create the vendor
     console.log("Creating new vendor:", formData);
     toast.success("Vendor created successfully");
     navigate("/vendors");
